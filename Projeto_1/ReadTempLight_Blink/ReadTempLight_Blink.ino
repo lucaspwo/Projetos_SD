@@ -27,12 +27,6 @@ int main (void){
     ldrLum = media;                                 //convertendo de nivel para "lumens"
     ldrLum = 4*ldrLum + 1000;
     
-    //float resVolt = (float)luz / 1023 * 5;          //obtendo o valor da tensao no resistor de referencia
-    //float ldrVolt = 5 - resVolt;                    //obtendo o valor de tensao no LDR
-    //float ldrRes = ldrVolt/resVolt * 10000;         //obtendo a resistencia no LDR
-    //float ldrLux = 12518931 * pow(ldrRes, -1.405);  //convertendo a resistencia do LDR em lux
-    //float ldrLum = ldrLux * 1256.6;                 //convertendo de lux para lumen (angulo de radiacao da fonte: 360 graus; 10 metros de distancia da fonte)
-
     for(uint8_t i = 0; i<5; i++){
       ADMUX &= 0;                                   //zerando ADMUX
       ADMUX |= 0b01000001;                          //setando o AREF para 5V e setando MUX3..0 para ler o ADC1 (A1 no Arduino)
@@ -56,7 +50,7 @@ int main (void){
     steinhart += 1.0 / (25 + 273.15);
     steinhart = 1.0 / steinhart;
     steinhart -= 273.15;
-    
+
     if(ldrLum >= 3500 && steinhart >= 25)     //condicao de acionamento do LED
       PORTB |= _BV(PORTB5);                   //acionando o LED no pino B5
     else
