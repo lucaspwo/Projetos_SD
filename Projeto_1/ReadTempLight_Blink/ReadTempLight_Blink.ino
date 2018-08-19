@@ -1,7 +1,7 @@
 #include <avr/io.h>
 
 int main (void){
-  int luz = 0;              //inicializacao das variaveis
+  float luz = 0;              //inicializacao das variaveis
   uint16_t amostras[5];
   float media;
 
@@ -9,16 +9,26 @@ int main (void){
   DDRB |=_BV(DDB5);         //setando o pino B5 como saida (pino 13 no Arduino)
 
   while(true){
-    ADMUX &= 0;                                     //zerando ADMUX
-    ADMUX |= 0b01000000;                            //setando o AREF para 5V e setando MUX3..0 para ler o ADC0 (A0 no Arduino)
-    ADCSRA |= 0b01000000;                           //iniciando a conversao
-    while(!(ADCSRA & 0b00010000));                  //esperando pelo ADIF = 1
-    luz = ADC;                                      //armazenando o resultado
+    for(uint8_t i = 0; i<5; i++){
+      ADMUX &= 0;                                     //zerando ADMUX
+      ADMUX |= 0b01000000;                            //setando o AREF para 5V e setando MUX3..0 para ler o ADC0 (A0 no Arduino)
+      ADCSRA |= 0b01000000;                           //iniciando a conversao
+      while(!(ADCSRA & 0b00010000));                  //esperando pelo ADIF = 1
+      amostras[i] = ADC;                              //armazenando o resultado
+    }
+    
+    media = 0;
+    for(uint8_t i = 0; i<5; i++){                   //tirando a media dos valores
+      media += amostras[i];
+    }
+    media /= 5;
+    
+    luz = media;
     float resVolt = (float)luz / 1023 * 5;          //obtendo o valor da tensao no resistor de referencia
     float ldrVolt = 5 - resVolt;                    //obtendo o valor de tensao no LDR
     float ldrRes = ldrVolt/resVolt * 10000;         //obtendo a resistencia no LDR
     float ldrLux = 12518931 * pow(ldrRes, -1.405);  //convertendo a resistencia do LDR em lux
-    float ldrLum = ldrLux * 100;                    //convertendo de lux para lumen
+    float ldrLum = ldrLux * 1256.6;                 //convertendo de lux para lumen (angulo de radiacao da fonte: 360 graus; 10 metros de distancia da fonte)
 
     for(uint8_t i = 0; i<5; i++){
       ADMUX &= 0;                                   //zerando ADMUX
