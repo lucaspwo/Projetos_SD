@@ -1,7 +1,8 @@
 #include <avr/io.h>
 
 int main (void){
-  float luz = 0;              //inicializacao das variaveis
+  float steinhart;          //inicializacao das variaveis
+  float ldrLum;
   uint16_t amostras[5];
   float media;
 
@@ -10,11 +11,11 @@ int main (void){
 
   while(true){
     for(uint8_t i = 0; i<5; i++){
-      ADMUX &= 0;                                     //zerando ADMUX
-      ADMUX |= 0b01000000;                            //setando o AREF para 5V e setando MUX3..0 para ler o ADC0 (A0 no Arduino)
-      ADCSRA |= 0b01000000;                           //iniciando a conversao
-      while(!(ADCSRA & 0b00010000));                  //esperando pelo ADIF = 1
-      amostras[i] = ADC;                              //armazenando o resultado
+      ADMUX &= 0;                                   //zerando ADMUX
+      ADMUX |= 0b01000000;                          //setando o AREF para 5V e setando MUX3..0 para ler o ADC0 (A0 no Arduino)
+      ADCSRA |= 0b01000000;                         //iniciando a conversao
+      while(!(ADCSRA & 0b00010000));                //esperando pelo ADIF = 1
+      amostras[i] = ADC;                            //armazenando o resultado
     }
     
     media = 0;
@@ -23,12 +24,14 @@ int main (void){
     }
     media /= 5;
     
-    luz = media;
-    float resVolt = (float)luz / 1023 * 5;          //obtendo o valor da tensao no resistor de referencia
-    float ldrVolt = 5 - resVolt;                    //obtendo o valor de tensao no LDR
-    float ldrRes = ldrVolt/resVolt * 10000;         //obtendo a resistencia no LDR
-    float ldrLux = 12518931 * pow(ldrRes, -1.405);  //convertendo a resistencia do LDR em lux
-    float ldrLum = ldrLux * 1256.6;                 //convertendo de lux para lumen (angulo de radiacao da fonte: 360 graus; 10 metros de distancia da fonte)
+    ldrLum = media;                                 //convertendo de nivel para "lumens"
+    ldrLum = 4*ldrLum + 1000;
+    
+    //float resVolt = (float)luz / 1023 * 5;          //obtendo o valor da tensao no resistor de referencia
+    //float ldrVolt = 5 - resVolt;                    //obtendo o valor de tensao no LDR
+    //float ldrRes = ldrVolt/resVolt * 10000;         //obtendo a resistencia no LDR
+    //float ldrLux = 12518931 * pow(ldrRes, -1.405);  //convertendo a resistencia do LDR em lux
+    //float ldrLum = ldrLux * 1256.6;                 //convertendo de lux para lumen (angulo de radiacao da fonte: 360 graus; 10 metros de distancia da fonte)
 
     for(uint8_t i = 0; i<5; i++){
       ADMUX &= 0;                                   //zerando ADMUX
@@ -47,8 +50,7 @@ int main (void){
     media = 1023 / media -1;                        //obtendo a resistencia medida pelo sensor
     media = 4700 / media;
     
-    float steinhart;                                //realizando o calculo de conversao de resistencia em graus celsius
-    steinhart = media / 4700;
+    steinhart = media / 4700;                       //realizando o calculo de conversao de resistencia em graus celsius
     steinhart = log(steinhart);
     steinhart /= 3950;
     steinhart += 1.0 / (25 + 273.15);
