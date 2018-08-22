@@ -4,4 +4,6 @@
 
 ---
 
-[Projeto 1: Simulador de despertador com sensores de luminosidade e temperatura](https://github.com/lucaspwo/Projetos_SD/tree/master/Projeto_1)
+[Mini Projeto 1: Simulador de despertador com sensores de luminosidade e temperatura](https://github.com/lucaspwo/Projetos_SD/tree/master/Mini_Projeto_1)
+
+[Mini Projeto 2: MP1 + contador de tempo (30s) via interrupções](https://github.com/lucaspwo/Projetos_SD/tree/master/Mini_Projeto_2)
