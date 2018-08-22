@@ -1,6 +1,5 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <stdbool.h>
 
 int cont = 0;               //inicializacao da variavel que vai contar os overflows
 
