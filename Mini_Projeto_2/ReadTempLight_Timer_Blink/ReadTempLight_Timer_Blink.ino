@@ -8,10 +8,10 @@ ISR(TIMER1_OVF_vect){       //funcao que e chamada a cada overflow do TIMER1
 }
 
 int main (void){
-  float steinhart;          //inicializacao das variaveis
-  float ldrLum;
-  uint16_t amostras[5];
-  float media;
+  float steinhart;          //variavel responsavel por armazenar a temperatura
+  float ldrLum;             //variavel responsavel por armazenar a taxa de luz
+  uint16_t amostras[5];     //variavel para armazenar 5 leituras consecutivas para calculo de media
+  float media;              //variavel para armazenar a media
 
   TCCR1B |= _BV(CS12);      //setando os bits CS12 e CS10 (clk/1024)
   TCCR1B |= _BV(CS10);
