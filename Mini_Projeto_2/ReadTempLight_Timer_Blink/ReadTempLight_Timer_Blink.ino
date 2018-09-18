@@ -25,7 +25,7 @@ int main (void){
     for(uint8_t i = 0; i<5; i++){
       ADMUX &= 0;                                   //zerando ADMUX
       ADMUX |= 0b01000000;                          //setando o AREF para 5V e setando MUX3..0 para ler o ADC0 (A0 no Arduino)
-      ADCSRA |= 0b01000000;                         //iniciando a conversao
+      ADCSRA |= 0b01000000;                         //iniciando a conversao (ADSC = 1)
       while(!(ADCSRA & 0b00010000));                //esperando pelo ADIF = 1
       amostras[i] = ADC;                            //armazenando o resultado
     }
@@ -42,7 +42,7 @@ int main (void){
     for(uint8_t i = 0; i<5; i++){
       ADMUX &= 0;                                   //zerando ADMUX
       ADMUX |= 0b01000001;                          //setando o AREF para 5V e setando MUX3..0 para ler o ADC1 (A1 no Arduino)
-      ADCSRA |= 0b01000000;                         //iniciando a conversao
+      ADCSRA |= 0b01000000;                         //iniciando a conversao (ADSC = 1)
       while(!(ADCSRA & 0b00010000));                //esperando pelo ADIF = 1
       amostras[i] = ADC;                            //armazenando o resultado
     }
