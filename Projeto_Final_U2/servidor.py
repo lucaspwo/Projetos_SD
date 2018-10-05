@@ -28,13 +28,16 @@ class recebeMsgCliente(threading.Thread):
                     msg = self.clientes[self.chave]['socket'].recv(2048)
                     if msg == 'iniciar()':
                         print('Iniciando processo de secagem')
+                        self.clientes[self.chave]['socket'].send('Iniciando processo de secagem...\n')
                         thread_enviarMsgInicio = enviaMsgCliente(self.clientes,'Iniciando processo de secagem',self.chave)
                         thread_enviarMsgInicio.start()
                     elif msg == 'terminar()':
                         print('Terminando o processo de secagem')
+                        self.clientes[self.chave]['socket'].send('Terminando o processo de secagem...\n')
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Terminando o processo de secagem',self.chave)
                         thread_enviarMsgTermina.start()
                     elif msg == 'sair()':
+                        self.clientes[self.chave]['socket'].send('Saindo do servidor...')
                         self.clientes[self.chave]['socket'].close()
                         conectado = False
                         #print self.clientes[self.chave]['nick'], 'saiu'
@@ -42,6 +45,8 @@ class recebeMsgCliente(threading.Thread):
                                 if self.clientes[i] == self.clientes[self.chave]:
                                     del self.clientes[i]
                                     break
+                    else:
+                        self.clientes[self.chave]['socket'].send('Comando incorreto. Tente novamente\n')
                 except:
                     if self.chave not in self.clientes:
                         conectado = False
@@ -100,7 +105,11 @@ while conectado:
             #text = client_connection.recv(2048)
             #print(text)
             clientes.update({client_address:{'ip':str(client_address[0]), 'porta':str(client_address[1]), 'socket':client_connection}})
-            client_connection.send('Servidor escreveu: Voce esta conectado')
+            client_connection.send('Servidor: Voce esta conectado\n\n')
+            client_connection.send('Comandos:\n')
+            client_connection.send('iniciar()\t: Inicia a secagem de graos\n')
+            client_connection.send('terminar()\t: Termina a secagem de graos\n')
+            client_connection.send('sair()\t\t: Desconecta do servidor\n')
             threadRecebe = recebeMsgCliente(clientes,client_address)
             threadRecebe.start()
             conn = False
