@@ -1,5 +1,7 @@
 import threading, socket, mraa, time
 
+i2c = mraa.I2c(0)
+i2c.address(0x04)
 d3 = mraa.Pwm(3)        #L2
 d3.period_us(100)       #10kHz
 d5 = mraa.Pwm(5)        #L3
@@ -7,7 +9,7 @@ d5.period_us(100)       #10kHz
 d6 = mraa.Pwm(6)        #DRV
 d6.period_us(100)       #10kHz
 d12 = mraa.Gpio(12)     #L1
-d8.dir(mraa.DIR_OUT)
+d12.dir(mraa.DIR_OUT)
 a1 = mraa.Aio(1)        #CH1
 a0 = mraa.Aio(0)        #LDR
 
@@ -28,6 +30,12 @@ conectado = True
 
 global init
 init = False
+
+global temp
+temp = 0
+
+global umi
+umi = 0
 
 class recebeMsgCliente(threading.Thread):
     def __init__(self,clientes,chave):
@@ -118,6 +126,17 @@ class botao(threading.Thread):
                 global init
                 init = True
 
+class ledL1(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        while True:
+            global init
+            if init:
+                d12.write(1)
+            else:
+                d12.write(0)
+
 class ledLDR(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -129,6 +148,17 @@ class ledLDR(threading.Thread):
                 d3.write(a0.readFloat())
             else:
                 d3.enable(False)
+
+class readI2c(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        while True:
+            global temp
+            global umi
+            temp = int(i2c.readByte())
+            umi = int(i2c.readByte())
+            time.sleep(2)
 
 class secador(threading.Thread):
     def __init__(self):
@@ -151,8 +181,12 @@ threadServ = servidor(clientes)
 threadServ.start()
 threadBotao = botao()
 threadBotao.start()
+threadLedL1 = ledL1()
+threadLedL1.start()
 threadLedLDR = ledLDR()
 threadLedLDR.start()
+threadReadI2c = readI2c()
+threadReadI2c.start()
 threadSecador = secador()
 threadSecador.start()
 
