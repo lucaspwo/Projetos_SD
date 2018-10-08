@@ -118,12 +118,23 @@ class botao(threading.Thread):
                 global init
                 init = True
 
+class ledLDR(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        while True:
+            global init
+            if init:
+                d3.enable(True)
+                d3.write(a0.readFloat())
+            else:
+                d3.enable(False)
 
 class secador(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
-        d3.enable(True)
+        
         d5.enable(True)
         d6.enable(True)
         
@@ -140,6 +151,8 @@ threadServ = servidor(clientes)
 threadServ.start()
 threadBotao = botao()
 threadBotao.start()
+threadLedLDR = ledLDR()
+threadLedLDR.start()
 threadSecador = secador()
 threadSecador.start()
 
