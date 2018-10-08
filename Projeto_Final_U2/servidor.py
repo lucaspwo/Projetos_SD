@@ -1,4 +1,15 @@
-import threading, socket
+import threading, socket, mraa, time
+
+d3 = mraa.Pwm(3)        #L2
+d3.period_us(100)       #10kHz
+d5 = mraa.Pwm(5)        #L3
+d5.period_us(100)       #10kHz
+d6 = mraa.Pwm(6)        #DRV
+d6.period_us(100)       #10kHz
+d12 = mraa.Gpio(12)     #L1
+d8.dir(mraa.DIR_OUT)
+a1 = mraa.Aio(1)        #CH1
+a0 = mraa.Aio(0)        #LDR
 
 HOST = ''
 PORT = 12000
@@ -15,6 +26,9 @@ print 'Servidor aguardando conexoes na porta %s ...' % PORT
 global conectado
 conectado = True
 
+global init
+init = False
+
 class recebeMsgCliente(threading.Thread):
     def __init__(self,clientes,chave):
         threading.Thread.__init__(self)
@@ -27,16 +41,22 @@ class recebeMsgCliente(threading.Thread):
                 try:
                     msg = self.clientes[self.chave]['socket'].recv(2048)
                     if msg == 'iniciar()':
+                        global init
+                        init = True
                         print('Iniciando processo de secagem')
                         self.clientes[self.chave]['socket'].send('Iniciando processo de secagem...\n')
                         thread_enviarMsgInicio = enviaMsgCliente(self.clientes,'Iniciando processo de secagem',self.chave)
                         thread_enviarMsgInicio.start()
                     elif msg == 'terminar()':
+                        global init
+                        init = False
                         print('Terminando o processo de secagem')
                         self.clientes[self.chave]['socket'].send('Terminando o processo de secagem...\n')
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Terminando o processo de secagem',self.chave)
                         thread_enviarMsgTermina.start()
                     elif msg == 'sair()':
+                        global init
+                        init = False
                         self.clientes[self.chave]['socket'].send('Saindo do servidor...')
                         self.clientes[self.chave]['socket'].close()
                         conectado = False
@@ -89,10 +109,39 @@ class servidor(threading.Thread):
                 conectado = False
                 # sys.exit(1)
 
+class botao(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        while True:
+            if(a1.read() == False):
+                global init
+                init = True
+
+
+class secador(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        d3.enable(True)
+        d5.enable(True)
+        d6.enable(True)
+        
+        while True:
+            global init
+            while init:
+                luz = a0.read()
+                #receber valor DHT do Arduino (i2c)
+                
+
 clientes = {}
 
 threadServ = servidor(clientes)
 threadServ.start()
+threadBotao = botao()
+threadBotao.start()
+threadSecador = secador()
+threadSecador.start()
 
 conn = False
 
