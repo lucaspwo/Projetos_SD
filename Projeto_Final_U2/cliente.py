@@ -25,7 +25,7 @@ class recebeMsg (threading.Thread):
             else:
                 print msg
 
-serverName = '192.168.0.25' #inserir o ip do servidor
+serverName = '127.0.0.1' #inserir o ip do servidor
 serverPort = 12000
 
 clientSocket = socket(AF_INET, SOCK_STREAM)

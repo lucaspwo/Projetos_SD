@@ -15,7 +15,7 @@ a0 = mraa.Aio(0)        #LDR
 
 HOST = ''
 PORT = 12000
-SERVER = 'testServer'
+SERVER = 'SecadorGraosServer'
 
 listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -137,11 +137,9 @@ class recebeMsgCliente(threading.Thread):
                             thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 5 de secagem',self.chave)
                             thread_enviarMsgTermina.start()
                     elif msg == 'sair()':
-                        #init = False
                         self.clientes[self.chave]['socket'].send('Saindo do servidor...')
                         self.clientes[self.chave]['socket'].close()
                         conectado = False
-                        #print self.clientes[self.chave]['nick'], 'saiu'
                         for i in self.clientes.keys():
                                 if self.clientes[i] == self.clientes[self.chave]:
                                     del self.clientes[i]
@@ -180,15 +178,19 @@ class servidor(threading.Thread):
             msg = raw_input()
             if msg == 'sair()':
                 print 'Fechando o servidor'
+                global init
+                global act
+                global curva
+                curva = 0
+                init = False
+                act = False
                 if bool(self.clientes) == True:
                     for i in self.clientes.keys():
                         self.clientes[i]['socket'].send(msg)
                         self.clientes[i]['socket'].close()
-                        #print self.clientes[i]['nick'], 'saiu'
                         del self.clientes[i]
                 listen_socket.close()
                 conectado = False
-                # sys.exit(1)
                 os._exit(1)
 
 class botao(threading.Thread):
@@ -252,13 +254,6 @@ class conta(threading.Thread):
 class curvaThread(threading.Thread):
     def __init__(self):
         super(curvaThread, self).__init__()
-        #self._stop_event = threading.Event()
-
-    #def stop(self):
-        #self._stop_event.set()
-
-    #def stopped(self):
-        #return self._stop_event.is_set()
 
     def pwmWrite(self, pwm):
         d5.write(pwm)
