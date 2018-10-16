@@ -58,6 +58,7 @@ class recebeMsgCliente(threading.Thread):
         conectado = True
         global init
         global act
+        global curva
         while conectado:
             if self.chave in self.clientes:
                 try:
@@ -70,6 +71,7 @@ class recebeMsgCliente(threading.Thread):
                         thread_enviarMsgInicio = enviaMsgCliente(self.clientes,'Iniciando processo de secagem',self.chave)
                         thread_enviarMsgInicio.start()
                     elif msg == 'terminar()':
+                        curva = 0
                         init = False
                         act = False
                         print('Terminando o processo de secagem')
@@ -77,42 +79,42 @@ class recebeMsgCliente(threading.Thread):
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Terminando o processo de secagem',self.chave)
                         thread_enviarMsgTermina.start()
                     elif msg == 'curva1()':
+                        curva = 1
                         act = True
                         init = True
                         print('Forcando a curva 1 de secagem')
-                        threadCurva1.start()
                         self.clientes[self.chave]['socket'].send('Forcando a curva 1 de secagem...\n')
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 1 de secagem',self.chave)
                         thread_enviarMsgTermina.start()
                     elif msg == 'curva2()':
+                        curva = 2
                         act = True
                         init = True
                         print('Forcando a curva 2 de secagem')
-                        threadCurva2.start()
                         self.clientes[self.chave]['socket'].send('Forcando a curva 2 de secagem...\n')
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 2 de secagem',self.chave)
                         thread_enviarMsgTermina.start()
                     elif msg == 'curva3()':
+                        curva = 3
                         act = True
                         init = True
                         print('Forcando a curva 3 de secagem')
-                        threadCurva3.start()
                         self.clientes[self.chave]['socket'].send('Forcando a curva 3 de secagem...\n')
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 3 de secagem',self.chave)
                         thread_enviarMsgTermina.start()
                     elif msg == 'curva4()':
+                        curva = 4
                         act = True
                         init = True
                         print('Forcando a curva 4 de secagem')
-                        threadCurva4.start()
                         self.clientes[self.chave]['socket'].send('Forcando a curva 4 de secagem...\n')
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 4 de secagem',self.chave)
                         thread_enviarMsgTermina.start()
                     elif msg == 'curva5()':
+                        curva = 5
                         act = True
                         init = True
                         print('Forcando a curva 5 de secagem')
-                        threadCurva5.start()
                         self.clientes[self.chave]['socket'].send('Forcando a curva 5 de secagem...\n')
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 5 de secagem',self.chave)
                         thread_enviarMsgTermina.start()
@@ -229,240 +231,142 @@ class conta(threading.Thread):
         while True:
             tempo = time.time()
 
-class curva1(threading.Thread):
+class curvaThread(threading.Thread):
     def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        print('Iniciando curva 1')
-        d5.enable(True)
-        d6.enable(True)
-        global tempo
-        global init
-        pwm = 0
-        d5.write(pwm)
-        d6.write(pwm)
-        print('pwm: %f' % pwm)
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.035
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 5):
-            pass
-        for i in range(5):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.06
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 5):
-            pass
-        for i in range(5):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm - 0.13
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        d5.enable(False)
-        d6.enable(False)
-        init = False
+        super(curvaThread, self).__init__()
+        #self._stop_event = threading.Event()
 
-class curva2(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        print('Iniciando curva 2')
-        d5.enable(True)
-        d6.enable(True)
-        global tempo
-        global init
-        pwm = 0
-        d5.write(pwm)
-        d6.write(pwm)
-        print('pwm: %f' % pwm)
-        for i in range(20):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.035
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 5):
-            pass
-        for i in range(5):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.06
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 5):
-            pass
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm - 0.10
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        d5.enable(False)
-        d6.enable(False)
-        init = False
+    #def stop(self):
+        #self._stop_event.set()
 
-class curva3(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        print('Iniciando curva 3')
-        d5.enable(True)
-        d6.enable(True)
-        global tempo
-        global init
-        pwm = 0
-        d5.write(pwm)
-        d6.write(pwm)
-        print('pwm: %f' % pwm)
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.035
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 10):
-            pass
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.025
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 10):
-            pass
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm - 0.06
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        d5.enable(False)
-        d6.enable(False)
-        init = False
+    #def stopped(self):
+        #return self._stop_event.is_set()
 
-class curva4(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        print('Iniciando curva 4')
-        d5.enable(True)
-        d6.enable(True)
-        global tempo
-        global init
-        pwm = 0
+    def pwmWrite(self, pwm):
         d5.write(pwm)
         d6.write(pwm)
-        print('pwm: %f' % pwm)
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.055
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 5):
-            pass
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.045
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 10):
-            pass
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm - 0.10
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        d5.enable(False)
-        d6.enable(False)
-        init = False
 
-class curva5(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
     def run(self):
-        print('Iniciando curva 5')
-        d5.enable(True)
-        d6.enable(True)
+        global curva
         global tempo
         global init
-        pwm = 0
-        d5.write(pwm)
-        d6.write(pwm)
-        print('pwm: %f' % pwm)
-        for i in range(10):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.035
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 5):
-            pass
-        for i in range(5):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm + 0.04
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        agora = tempo
-        while(tempo - agora < 10):
-            pass
-        for i in range(20):
-            agora = tempo
-            while(tempo - agora < 1):
-                pass
-            pwm = pwm - 0.0275
-            d5.write(pwm)
-            d6.write(pwm)
-            print('pwm: %f' % pwm)
-        d5.enable(False)
-        d6.enable(False)
-        init = False
+        global act
+        while True:
+            while(init == True and act == True and curva != 0):
+                trecho = 0
+                cont = 0
+                pwm = 0
+                incr = 0
+                print('Iniciando curva %d' % curva)
+                d5.enable(True)
+                d6.enable(True)
+                self.pwmWrite(0)
+                print('pwm: %f' % pwm)
+                while(trecho < 6 and init == True):
+                    if(curva == 1 and trecho == 0):
+                        incr = 0.035
+                        cont = 10
+                    elif(curva == 1 and trecho == 1):
+                        cont = 5
+                    elif(curva == 1 and trecho == 2):
+                        incr = 0.06
+                        cont = 5
+                    elif(curva == 1 and trecho == 3):
+                        cont = 5
+                    elif(curva == 1 and trecho == 4):
+                        incr = -0.13
+                        cont = 5
+                    elif(curva == 2 and trecho == 0):
+                        incr = 0.035
+                        cont = 20
+                    elif(curva == 2 and trecho == 1):
+                        cont = 5
+                    elif(curva == 2 and trecho == 2):
+                        incr = 0.06
+                        cont = 5
+                    elif(curva == 2 and trecho == 3):
+                        cont = 5
+                    elif(curva == 2 and trecho == 4):
+                        incr = -0.10
+                        cont = 10
+                    elif(curva == 3 and trecho == 0):
+                        incr = 0.035
+                        cont = 10
+                    elif(curva == 3 and trecho == 1):
+                        cont = 10
+                    elif(curva == 3 and trecho == 2):
+                        incr = 0.025
+                        cont = 10
+                    elif(curva == 3 and trecho == 3):
+                        cont = 10
+                    elif(curva == 3 and trecho == 4):
+                        incr = -0.06
+                        cont = 10
+                    elif(curva == 4 and trecho == 0):
+                        incr = 0.055
+                        cont = 10
+                    elif(curva == 4 and trecho == 1):
+                        cont = 5
+                    elif(curva == 4 and trecho == 2):
+                        incr = 0.045
+                        cont = 10
+                    elif(curva == 4 and trecho == 3):
+                        cont = 10
+                    elif(curva == 4 and trecho == 4):
+                        incr = -0.10
+                        cont = 10
+                    elif(curva == 5 and trecho == 0):
+                        incr = 0.035
+                        cont = 10
+                    elif(curva == 5 and trecho == 1):
+                        cont = 5
+                    elif(curva == 5 and trecho == 2):
+                        incr = 0.04
+                        cont = 5
+                    elif(curva == 5 and trecho == 3):
+                        cont = 10
+                    elif(curva == 5 and trecho == 4):
+                        incr = -0.0275
+                        cont = 20
+                    else:
+                        if(trecho == 5):
+                            curva = 0
+                            d5.enable(False)
+                            d6.enable(False)
+                            init = False
+                            #self.stop()
+                    
+                    if(trecho == 0 or trecho == 2 or trecho == 4):
+                        for i in range(cont):
+                            agora = tempo
+                            while(tempo - agora < 1):
+                                pass
+                            pwm = pwm + incr
+                            self.pwmWrite(pwm)
+                            print('pwm: %f' % pwm)
+                            if not init:
+                                #self.stop()
+                                curva = 0
+                                d5.enable(False)
+                                d6.enable(False)
+                                break
+                    
+                    if(trecho == 1 or trecho == 3):
+                        agora = tempo
+                        while(tempo - agora < cont):
+                            pass
+                        if not init:
+                            curva = 0
+                            d5.enable(False)
+                            d6.enable(False)
+                            #self.stop()
+
+                    trecho = trecho + 1
+                curva = 0
+                d5.enable(False)
+                d6.enable(False)
+                init = False
+                #self.stop()
 
 class secador(threading.Thread):
     def __init__(self):
@@ -479,23 +383,18 @@ class secador(threading.Thread):
                 if( (temp > 20 and temp <= 50) and (umi > 80)  and (luz > 500 and luz <= 800) ):
                     curva = 1
                     act = True
-                    threadCurva1.start()
                 elif( (temp > 20 and temp <= 50) and (umi <= 70) and (luz > 500 and luz <= 800) ):
                     curva = 2
                     act = True
-                    threadCurva2.start()
                 elif( (temp > 20 and temp <= 50) and (umi <= 70) and (luz > 200 and luz <= 500) ):
                     curva = 3
                     act = True
-                    threadCurva3.start()
                 elif( (temp > 50 and temp <= 80) and (umi <= 60) and (luz > 200 and luz <= 700) ):
                     curva = 4
                     act = True
-                    threadCurva4.start()
                 else:
                     curva = 5
                     act = True
-                    threadCurva5.start()
 
 clientes = {}
 
@@ -511,11 +410,8 @@ threadLedLDR = ledLDR()
 threadLedLDR.start()
 threadReadI2c = readI2c()
 threadReadI2c.start()
-threadCurva1 = curva1()
-threadCurva2 = curva2()
-threadCurva3 = curva3()
-threadCurva4 = curva4()
-threadCurva5 = curva5()
+threadCurva = curvaThread()
+threadCurva.start()
 threadSecador = secador()
 threadSecador.start()
 
