@@ -64,12 +64,15 @@ class recebeMsgCliente(threading.Thread):
                 try:
                     msg = self.clientes[self.chave]['socket'].recv(2048)
                     if msg == 'iniciar()':
-                        init = True
-                        act = False
-                        print('Iniciando processo de secagem')
-                        self.clientes[self.chave]['socket'].send('Iniciando processo de secagem...\n')
-                        thread_enviarMsgInicio = enviaMsgCliente(self.clientes,'Iniciando processo de secagem',self.chave)
-                        thread_enviarMsgInicio.start()
+                        if(init == True):
+                            self.clientes[self.chave]['socket'].send('Processo de secagem em andamento. Interrompa com \'terminar()\' antes de iniciar\n')
+                        else:
+                            init = True
+                            act = False
+                            print('Iniciando processo de secagem')
+                            self.clientes[self.chave]['socket'].send('Iniciando processo de secagem...\n')
+                            thread_enviarMsgInicio = enviaMsgCliente(self.clientes,'Iniciando processo de secagem',self.chave)
+                            thread_enviarMsgInicio.start()
                     elif msg == 'terminar()':
                         curva = 0
                         init = False
@@ -79,47 +82,62 @@ class recebeMsgCliente(threading.Thread):
                         thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Terminando o processo de secagem',self.chave)
                         thread_enviarMsgTermina.start()
                     elif msg == 'curva1()':
-                        curva = 1
-                        act = True
-                        init = True
-                        print('Forcando a curva 1 de secagem')
-                        self.clientes[self.chave]['socket'].send('Forcando a curva 1 de secagem...\n')
-                        thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 1 de secagem',self.chave)
-                        thread_enviarMsgTermina.start()
+                        if(init == True):
+                            self.clientes[self.chave]['socket'].send('Processo de secagem em andamento. Interrompa com \'terminar()\' antes de iniciar\n')
+                        else:
+                            curva = 1
+                            act = True
+                            init = True
+                            print('Forcando a curva 1 de secagem')
+                            self.clientes[self.chave]['socket'].send('Forcando a curva 1 de secagem...\n')
+                            thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 1 de secagem',self.chave)
+                            thread_enviarMsgTermina.start()
                     elif msg == 'curva2()':
-                        curva = 2
-                        act = True
-                        init = True
-                        print('Forcando a curva 2 de secagem')
-                        self.clientes[self.chave]['socket'].send('Forcando a curva 2 de secagem...\n')
-                        thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 2 de secagem',self.chave)
-                        thread_enviarMsgTermina.start()
+                        if(init == True):
+                            self.clientes[self.chave]['socket'].send('Processo de secagem em andamento. Interrompa com \'terminar()\' antes de iniciar\n')
+                        else:
+                            curva = 2
+                            act = True
+                            init = True
+                            print('Forcando a curva 2 de secagem')
+                            self.clientes[self.chave]['socket'].send('Forcando a curva 2 de secagem...\n')
+                            thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 2 de secagem',self.chave)
+                            thread_enviarMsgTermina.start()
                     elif msg == 'curva3()':
-                        curva = 3
-                        act = True
-                        init = True
-                        print('Forcando a curva 3 de secagem')
-                        self.clientes[self.chave]['socket'].send('Forcando a curva 3 de secagem...\n')
-                        thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 3 de secagem',self.chave)
-                        thread_enviarMsgTermina.start()
+                        if(init == True):
+                            self.clientes[self.chave]['socket'].send('Processo de secagem em andamento. Interrompa com \'terminar()\' antes de iniciar\n')
+                        else:
+                            curva = 3
+                            act = True
+                            init = True
+                            print('Forcando a curva 3 de secagem')
+                            self.clientes[self.chave]['socket'].send('Forcando a curva 3 de secagem...\n')
+                            thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 3 de secagem',self.chave)
+                            thread_enviarMsgTermina.start()
                     elif msg == 'curva4()':
-                        curva = 4
-                        act = True
-                        init = True
-                        print('Forcando a curva 4 de secagem')
-                        self.clientes[self.chave]['socket'].send('Forcando a curva 4 de secagem...\n')
-                        thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 4 de secagem',self.chave)
-                        thread_enviarMsgTermina.start()
+                        if(init == True):
+                            self.clientes[self.chave]['socket'].send('Processo de secagem em andamento. Interrompa com \'terminar()\' antes de iniciar\n')
+                        else:
+                            curva = 4
+                            act = True
+                            init = True
+                            print('Forcando a curva 4 de secagem')
+                            self.clientes[self.chave]['socket'].send('Forcando a curva 4 de secagem...\n')
+                            thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 4 de secagem',self.chave)
+                            thread_enviarMsgTermina.start()
                     elif msg == 'curva5()':
-                        curva = 5
-                        act = True
-                        init = True
-                        print('Forcando a curva 5 de secagem')
-                        self.clientes[self.chave]['socket'].send('Forcando a curva 5 de secagem...\n')
-                        thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 5 de secagem',self.chave)
-                        thread_enviarMsgTermina.start()
+                        if(init == True):
+                            self.clientes[self.chave]['socket'].send('Processo de secagem em andamento. Interrompa com \'terminar()\' antes de iniciar\n')
+                        else:
+                            curva = 5
+                            act = True
+                            init = True
+                            print('Forcando a curva 5 de secagem')
+                            self.clientes[self.chave]['socket'].send('Forcando a curva 5 de secagem...\n')
+                            thread_enviarMsgTermina = enviaMsgCliente(self.clientes,'Forcando a curva 5 de secagem',self.chave)
+                            thread_enviarMsgTermina.start()
                     elif msg == 'sair()':
-                        init = False
+                        #init = False
                         self.clientes[self.chave]['socket'].send('Saindo do servidor...')
                         self.clientes[self.chave]['socket'].close()
                         conectado = False
