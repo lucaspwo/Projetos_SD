@@ -27,10 +27,10 @@ DHT dht(DHTPIN, DHTTYPE);
 float h;
 // Read temperature as Celsius (the default)
 float t;
-bool flag = false;
+bool flag = false;              // Variavel de controle do valor de saida no bus I2C
 void setup() {
-  Wire.begin(4);                // join i2c bus with address #4
-  Wire.onRequest(requestEvent); // register event
+  Wire.begin(4);                // Entra no bus I2C com endereco 4 (0x04)
+  Wire.onRequest(requestEvent); // Funcao para chamar quando houver requisicao no bus I2C
   Serial.begin(9600);
   Serial.println("DHTxx test!");
 
@@ -54,38 +54,21 @@ void loop() {
     return;
   }
 
-  // Compute heat index in Fahrenheit (the default)
-//  float hif = dht.computeHeatIndex(f, h);
-  // Compute heat index in Celsius (isFahreheit = false)
-//  float hic = dht.computeHeatIndex(t, h, false);
-
   Serial.print("Humidity: ");
   Serial.print(h);
   Serial.print(" %\t");
   Serial.print("Temperature: ");
   Serial.print(t);
   Serial.println(" *C ");
-//  Serial.print(f);
-//  Serial.print(" *F\t");
-//  Serial.print("Heat index: ");
-//  Serial.print(hic);
-//  Serial.print(" *C ");
-//  Serial.print(hif);
-//  Serial.println(" *F");
 }
 
-// function that executes whenever data is received from master
-// this function is registered as an event, see setup()
-void requestEvent(void){
-//  long int tmp = int(t) * 100;
-//  tmp = tmp + int(h);
-//  Wire.write(tmp);
+void requestEvent(void){    // Funcao que sera chamada a cada requisicao via I2C
   if (flag == false){
-    Wire.write(int(t));
-    flag = true;
+    Wire.write(int(t));     // Escrita no bus da temperatura como valor inteiro
+    flag = true;            // Alteracao da flag para a proxima leitura
   }
   else if (flag == true){
-    Wire.write(int(h));
-    flag = false;
+    Wire.write(int(h));     // Escrita no bus da umidade como valor inteiro
+    flag = false;           // Alteracao da flag para a proxima leitura
   }
 }
