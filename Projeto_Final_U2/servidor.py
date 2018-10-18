@@ -1,16 +1,16 @@
 import threading, socket, mraa, time, os
 
-i2c = mraa.I2c(0)
-i2c.address(0x04)
-d3 = mraa.Pwm(3)        #L2
-d3.period_us(700)
-d5 = mraa.Pwm(5)        #L3
+i2c = mraa.I2c(0)       #Linhas para acessar o Arduino (DHT11) via I2C
+i2c.address(0x04)       #Endereço do Arduino no bus I2C
+d3 = mraa.Pwm(3)        #Led2 (PWM)
+d3.period_us(700)       #Frequencia do PWM em us
+d5 = mraa.Pwm(5)        #Led3 (PWM)
 d5.period_us(700)
-d6 = mraa.Pwm(6)        #DRV
+d6 = mraa.Pwm(6)        #Driver do motor
 d6.period_us(700)
-d8 = mraa.Gpio(8)       #L1
+d8 = mraa.Gpio(8)       #Led1 (digital)
 d8.dir(mraa.DIR_OUT)
-a1 = mraa.Aio(1)        #CH1
+a1 = mraa.Aio(1)        #Chave1
 a0 = mraa.Aio(0)        #LDR
 
 HOST = ''
@@ -25,31 +25,31 @@ listen_socket.listen(1)
 
 print 'Servidor aguardando conexoes na porta %s ...' % PORT
 
-global conectado
+global conectado    #Variavel responsavel por deixar o socket (e o servidor) aberto
 conectado = True
 
-global init
+global init         #Variavel responsavel por representar o funcionamento do processo de secagem
 init = False
 
-global act
+global act          #Variavel responsavel por representar o funcionamento de uma curva do processo
 act = False
 
-global temp
+global temp         #Variavel que armazenara a temperatura vinda do bus I2C (DHT11 no Arduino)
 temp = 0
 
-global umi
+global umi          #Variavel que armazenara a umidade vinda do bus I2C (DHT11 no Arduino)
 umi = 0
 
-global luz
+global luz          #Variavel que armazenara a luminosidade do LDR
 luz = 0
 
-global curva
+global curva        #Variavel que representa a curva de secagem em funcionamento
 curva = 0
 
-global tempo
+global tempo        #Variavel que armazena o tempo de execucao do codigo
 tempo = 0
 
-class recebeMsgCliente(threading.Thread):
+class recebeMsgCliente(threading.Thread):       #Thread que gerencia o recebimento de mensagens do cliente
     def __init__(self,clientes,chave):
         threading.Thread.__init__(self)
         self.clientes = clientes
@@ -154,7 +154,7 @@ class recebeMsgCliente(threading.Thread):
                 conectado = False
                 break
 
-class enviaMsgCliente(threading.Thread):
+class enviaMsgCliente(threading.Thread):            #Thread que envia mensagem para os demais clientes
     def __init__(self,clientes,mensagem,chave):
         threading.Thread.__init__(self)
         self.clientes = clientes
@@ -168,7 +168,7 @@ class enviaMsgCliente(threading.Thread):
         else:
             print 'Servidor vazio. Ninguem para enviar mensagem'
 
-class servidor(threading.Thread):
+class servidor(threading.Thread):                   #Thread para monitorar a entrada de texto no lado do servidor, para parar a execucao do codigo
     def __init__(self,clientes):
         threading.Thread.__init__(self)
         self.clientes = clientes
@@ -193,7 +193,7 @@ class servidor(threading.Thread):
                 conectado = False
                 os._exit(1)
 
-class botao(threading.Thread):
+class botao(threading.Thread):                  #Thread que monitora a chave1 pro inicio do processo de secagem
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -205,7 +205,7 @@ class botao(threading.Thread):
                     init = True
                     act = False
 
-class ledL1(threading.Thread):
+class ledL1(threading.Thread):                  #Thread que monitora o booleano init para acender o led1
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -216,7 +216,7 @@ class ledL1(threading.Thread):
             else:
                 d8.write(0)
 
-class ledLDR(threading.Thread):
+class ledLDR(threading.Thread):                 #Thread que monitora o booleano init para variar o birlho do led2 de acordo com a leitura do LDR
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -230,7 +230,7 @@ class ledLDR(threading.Thread):
             else:
                 d3.enable(False)
 
-class readI2c(threading.Thread):
+class readI2c(threading.Thread):                #Thread resposavel por pegar os valores do DHT11 atraves do bus I2C
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -243,7 +243,7 @@ class readI2c(threading.Thread):
             #print('Umi: %d' % umi)
             time.sleep(2)
 
-class conta(threading.Thread):
+class conta(threading.Thread):                  #Thread para contar o tempo de execucao do codigo
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -251,11 +251,11 @@ class conta(threading.Thread):
         while True:
             tempo = time.time()
 
-class curvaThread(threading.Thread):
+class curvaThread(threading.Thread):            #Thread que gera a curva de secagem
     def __init__(self):
         super(curvaThread, self).__init__()
 
-    def pwmWrite(self, pwm):
+    def pwmWrite(self, pwm):                    #Funcao que escreve no led3 e no driver do motor de secagem
         d5.write(pwm)
         d6.write(pwm)
 
@@ -266,12 +266,12 @@ class curvaThread(threading.Thread):
         global act
         while True:
             while(init == True and act == True and curva != 0):
-                trecho = 0
-                cont = 0
-                pwm = 0
-                incr = 0
+                trecho = 0          #Controla o trecho da curva de saida
+                cont = 0            #Variavel para controlar o tempo de espera nos lacos de repeticao
+                pwm = 0             #Valor do PWM de saida para o led3 e driver do motor
+                incr = 0            #Valor de incremento ao PWM
                 print('Iniciando curva %d' % curva)
-                d5.enable(True)
+                d5.enable(True)     #Ativa a saida PWM
                 d6.enable(True)
                 self.pwmWrite(0)
                 print('pwm: %f' % pwm)
@@ -342,29 +342,29 @@ class curvaThread(threading.Thread):
                         incr = -0.0275
                         cont = 20
                     else:
-                        if(trecho == 5):
+                        if(trecho == 5):                #Se trecho = 5, significa que o codigo terminou e podera sair do laco while na proxima iteracao
                             curva = 0
                             d5.enable(False)
                             d6.enable(False)
                             init = False
                             #self.stop()
                     
-                    if(trecho == 0 or trecho == 2 or trecho == 4):
+                    if(trecho == 0 or trecho == 2 or trecho == 4):      #Trechos da curva que possuem uma inclinacao (positiva ou negativa) que precisa de incrementos de valor ao longo do tempo
                         for i in range(cont):
                             agora = tempo
-                            while(tempo - agora < 1):
+                            while(tempo - agora < 1):                   #Compara o tempo de execucao com um valor inicial para contar intervalos de tempo
                                 pass
                             pwm = pwm + incr
                             self.pwmWrite(pwm)
                             print('pwm: %f' % pwm)
-                            if not init:
+                            if not init:                                #Verificacao do cancelamento do funcionamento do processo de secagem
                                 #self.stop()
                                 curva = 0
                                 d5.enable(False)
                                 d6.enable(False)
                                 break
                     
-                    if(trecho == 1 or trecho == 3):
+                    if(trecho == 1 or trecho == 3):                     #Trechos da curva que nao possuem inclinacao. A saida permanece a mesma pela quantidade de tempo definida pelo contador cont
                         agora = tempo
                         while(tempo - agora < cont):
                             pass
@@ -375,13 +375,13 @@ class curvaThread(threading.Thread):
                             #self.stop()
 
                     trecho = trecho + 1
-                curva = 0
-                d5.enable(False)
+                curva = 0                       #Finalizacao do codigo
+                d5.enable(False)                #Desliga a saida PWM
                 d6.enable(False)
-                init = False
+                init = False                    #Desliga os leds
                 #self.stop()
 
-class secador(threading.Thread):
+class secador(threading.Thread):                #Thread responsavel por selecionar a curva de secagem apropriada
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -409,7 +409,7 @@ class secador(threading.Thread):
                     curva = 5
                     act = True
 
-clientes = {}
+clientes = {}                       #Variavel que armazenara a lista de clientes
 
 threadServ = servidor(clientes)
 threadServ.start()
@@ -428,7 +428,7 @@ threadCurva.start()
 threadSecador = secador()
 threadSecador.start()
 
-conn = False
+conn = False                #Variavel de controle para iniciar a conexao com o cliente
 
 while conectado:
     try:
