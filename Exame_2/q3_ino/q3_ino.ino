@@ -1,22 +1,22 @@
-#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>             //Importando a biblioteca
 
-SoftwareSerial mySerial(10, 11); // RX, TX
+SoftwareSerial mySerial(10, 11);        // 10 = RX, 11 = TX
 
 void setup() {
   Serial.begin(115200);
   while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
+    ; 
   }
 
-  mySerial.begin(115200);
+  mySerial.begin(115200);               //Inicializando a serial
 }
 
 void loop() { 
-  if (mySerial.available()) {
+  if (mySerial.available()) {           //Caso haja envio da Galileo
     String rx = mySerial.readString();
-    Serial.println(rx);
-    if(rx == "X"){
-      mySerial.write("Yes, master!");
+    Serial.println(rx);                 //Exibindo o texto na tela
+    if(rx == "X"){                      //Caso venha um X...
+      mySerial.write("Sim, mestre!");   //... envie uma string especial
     }
   }
 }
