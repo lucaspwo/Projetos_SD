@@ -5755,8 +5755,8 @@ Source: http://www.national.com/ds/LM/LM35.pdf</description>
 </plain>
 <instances>
 <instance part="Q1" gate="G$1" x="66.04" y="27.94">
-<attribute name="NAME" x="71.12" y="30.48" size="1.778" layer="95"/>
-<attribute name="VALUE" x="71.12" y="27.94" size="1.778" layer="96"/>
+<attribute name="NAME" x="71.12" y="33.02" size="1.778" layer="95"/>
+<attribute name="VALUE" x="71.12" y="30.48" size="1.778" layer="96"/>
 </instance>
 <instance part="S1" gate="1" x="10.16" y="-10.16" rot="R270">
 <attribute name="NAME" x="7.62" y="-3.81" size="1.778" layer="95"/>
@@ -5764,44 +5764,48 @@ Source: http://www.national.com/ds/LM/LM35.pdf</description>
 </instance>
 <instance part="LED1" gate="G$1" x="30.48" y="-10.16">
 <attribute name="NAME" x="34.036" y="-14.732" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="36.195" y="-14.732" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="LED2" gate="G$1" x="40.64" y="-10.16">
 <attribute name="NAME" x="44.196" y="-14.732" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="46.355" y="-14.732" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="LED3" gate="G$1" x="50.8" y="-10.16">
 <attribute name="NAME" x="54.356" y="-14.732" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="56.515" y="-14.732" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R2" gate="G$1" x="-7.62" y="-7.62" rot="R90">
-<attribute name="NAME" x="-9.1186" y="-8.89" size="1.778" layer="95" rot="R90"/>
+<attribute name="NAME" x="-9.1186" y="-11.43" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="-4.318" y="-11.43" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R3" gate="G$1" x="30.48" y="0" rot="R90">
-<attribute name="NAME" x="28.9814" y="-1.27" size="1.778" layer="95" rot="R90"/>
+<attribute name="NAME" x="28.9814" y="-3.81" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="33.782" y="-3.81" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R4" gate="G$1" x="40.64" y="0" rot="R90">
-<attribute name="NAME" x="39.1414" y="-1.27" size="1.778" layer="95" rot="R90"/>
+<attribute name="NAME" x="39.1414" y="-3.81" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="43.942" y="-3.81" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R5" gate="G$1" x="50.8" y="0" rot="R90">
-<attribute name="NAME" x="49.3014" y="-1.27" size="1.778" layer="95" rot="R90"/>
+<attribute name="NAME" x="49.3014" y="-3.81" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="54.102" y="-3.81" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="SV1" gate="1" x="-7.62" y="30.48">
 <attribute name="VALUE" x="-8.89" y="17.78" size="1.778" layer="96"/>
-<attribute name="NAME" x="-10.922" y="19.05" size="1.778" layer="95" rot="R90"/>
+<attribute name="NAME" x="-8.89" y="41.402" size="1.778" layer="95"/>
 </instance>
 <instance part="PH1" gate="G$1" x="-7.62" y="5.08">
-<attribute name="NAME" x="-5.08" y="7.62" size="1.778" layer="95" rot="R270"/>
+<attribute name="NAME" x="-5.08" y="5.08" size="1.778" layer="95"/>
+<attribute name="VALUE" x="-5.08" y="2.54" size="1.778" layer="96"/>
 </instance>
 <instance part="GND1" gate="1" x="2.54" y="15.24">
 <attribute name="VALUE" x="0" y="12.7" size="1.778" layer="96"/>
 </instance>
 <instance part="P+1" gate="1" x="10.16" y="27.94">
-<attribute name="VALUE" x="7.62" y="27.94" size="1.778" layer="96"/>
+<attribute name="VALUE" x="7.62" y="22.86" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="P+2" gate="1" x="-7.62" y="15.24">
-<attribute name="VALUE" x="-10.16" y="15.24" size="1.778" layer="96"/>
+<attribute name="VALUE" x="-10.16" y="10.16" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="GND2" gate="1" x="-7.62" y="-17.78">
 <attribute name="VALUE" x="-10.16" y="-20.32" size="1.778" layer="96"/>
@@ -5824,19 +5828,20 @@ Source: http://www.national.com/ds/LM/LM35.pdf</description>
 </instance>
 <instance part="MOTOR" gate="-1" x="73.66" y="40.64">
 <attribute name="NAME" x="76.2" y="39.878" size="1.524" layer="95"/>
+<attribute name="VALUE" x="72.898" y="42.037" size="1.778" layer="96"/>
 </instance>
 <instance part="MOTOR" gate="-2" x="73.66" y="38.1">
 <attribute name="NAME" x="76.2" y="37.338" size="1.524" layer="95"/>
 </instance>
 <instance part="R1" gate="G$1" x="22.86" y="35.56">
-<attribute name="NAME" x="21.59" y="37.0586" size="1.778" layer="95"/>
+<attribute name="NAME" x="19.05" y="37.0586" size="1.778" layer="95"/>
 <attribute name="VALUE" x="19.05" y="32.258" size="1.778" layer="96"/>
 </instance>
 <instance part="GND7" gate="1" x="25.4" y="22.86">
 <attribute name="VALUE" x="22.86" y="20.32" size="1.778" layer="96"/>
 </instance>
 <instance part="R6" gate="G$1" x="55.88" y="27.94">
-<attribute name="NAME" x="54.61" y="29.4386" size="1.778" layer="95"/>
+<attribute name="NAME" x="52.07" y="29.4386" size="1.778" layer="95"/>
 <attribute name="VALUE" x="52.07" y="24.638" size="1.778" layer="96"/>
 </instance>
 <instance part="INPUT" gate="-1" x="76.2" y="20.32" rot="R180">
@@ -5854,20 +5859,20 @@ Source: http://www.national.com/ds/LM/LM35.pdf</description>
 <attribute name="VALUE" x="68.58" y="-2.54" size="1.778" layer="96"/>
 </instance>
 <instance part="P+3" gate="1" x="58.42" y="17.78">
-<attribute name="VALUE" x="55.88" y="17.78" size="1.778" layer="96"/>
+<attribute name="VALUE" x="55.88" y="12.7" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="DHT11" gate="1" x="73.66" y="-7.62" rot="R270">
 <attribute name="VALUE" x="63.5" y="-6.35" size="1.778" layer="96" rot="R270"/>
-<attribute name="NAME" x="77.47" y="-14.478" size="1.778" layer="95"/>
+<attribute name="NAME" x="79.502" y="-6.35" size="1.778" layer="95" rot="R270"/>
 </instance>
 <instance part="GND9" gate="1" x="76.2" y="-25.4">
 <attribute name="VALUE" x="73.66" y="-27.94" size="1.778" layer="96"/>
 </instance>
 <instance part="P+4" gate="1" x="63.5" y="-10.16">
-<attribute name="VALUE" x="60.96" y="-10.16" size="1.778" layer="96"/>
+<attribute name="VALUE" x="60.96" y="-10.16" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="R7" gate="G$1" x="66.04" y="-25.4" rot="R90">
-<attribute name="NAME" x="64.5414" y="-26.67" size="1.778" layer="95" rot="R90"/>
+<attribute name="NAME" x="64.5414" y="-29.21" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="69.342" y="-29.21" size="1.778" layer="96" rot="R90"/>
 </instance>
 </instances>
@@ -6022,7 +6027,7 @@ Source: http://www.national.com/ds/LM/LM35.pdf</description>
 <wire x1="-7.62" y1="-2.54" x2="-7.62" y2="0" width="0.1524" layer="91"/>
 <wire x1="-7.62" y1="0" x2="-2.54" y2="0" width="0.1524" layer="91"/>
 <junction x="-7.62" y="0"/>
-<label x="-7.62" y="0" size="1.778" layer="95"/>
+<label x="-5.08" y="0" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="SV1" gate="1" pin="7"/>
